@@ -11,9 +11,7 @@ elif infocmp xterm-256color >/dev/null 2>&1; then
 	export TERM='xterm-256color';
 fi;
 
-#Turn off automatic conda env prompt
-conda config --set changeps1 False
-
+echo $CONDA_DEFAULT_ENV
 check_conda_env ()
 {
     if [ ! -z "$CONDA_DEFAULT_ENV" ]; then
@@ -121,7 +119,8 @@ fi;
 PS1="\[\033]0;\W\007\]"; # working directory base name
 PS1+="\[${bold}\]\n"; # newline
 PS1+="\[${blue}\](\D{%b-%d} \A) ";
-PS1+="\[${cyan}\]<$(check_conda_env)>";
+# PS1+="\[${cyan}\]<$(check_conda_env)>";
+PS1+="\[${cyan}\]"'<$(basename "$CONDA_DEFAULT_ENV")>';
 PS1+="\[${white}\] am "
 PS1+="\[${userStyle}\]\u"; # username
 PS1+="\[${white}\] at ";
