@@ -1,6 +1,8 @@
-# Add `~/bin` to the `$PATH`
+#20200205_1 Add `~/bin` to the `$PATH`
 export PATH="$HOME/bin:$PATH";
-export TZ=US/Pacific date
+export TZ=US/Pacific
+# Tell OSX not to complain about bash
+export BASH_SILENCE_DEPRECATION_WARNING=1
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
@@ -48,5 +50,33 @@ complete -W "NSGlobalDomain" defaults;
 complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes SystemUIServer Terminal Twitter" killall;
 
 #Set vim as default editor
-export VISUAL=vim
+export VISUAL=nvim
 export EDITOR="$VISUAL"
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/johnchase/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/johnchase/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/johnchase/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/johnchase/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+alias clock='while true; do tput reset; date +"%H:%M:%S" | figlet -f epic; sleep 1; done'
+alias vim="nvim"
+alias vi="nvim"
+alias oldvim="vim"
+alias fix_pg="rm /usr/local/var/postgres/postmaster.pid"
+alias kpyc="find . -name "*.pyc" -exec rm -f {} \;"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/johnchase/Downloads/google-cloud-sdk/path.bash.inc' ]; then . '/Users/johnchase/Downloads/google-cloud-sdk/path.bash.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/johnchase/Downloads/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/johnchase/Downloads/google-cloud-sdk/completion.bash.inc'; fi

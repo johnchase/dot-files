@@ -29,11 +29,6 @@ set scrolloff=5
 
 autocmd VimResized * wincmd =
 
-" Auto indent pasted text
-nnoremap p p=`]<C-o>
-nnoremap P P=`]<C-o>
-
-
 " Autocomplete and exit brackets"
 inoremap ( ()<Esc>i
 inoremap [ []<Esc>i
@@ -44,6 +39,9 @@ noremap <Up> <Nop>
 noremap <Down> <Nop>
 noremap <Left> <Nop>
 noremap <Right> <Nop>
+" This sets clipboard to the previous selection so that you can paste multiple
+" times. It is very useful
+xnoremap p pgvy
 
 filetype plugin indent on
 
@@ -54,8 +52,8 @@ set infercase
 map <F2> :NERDTreeToggle<CR>
 
 "Show hidden files in NerdTree
-"let NERDTreeShowHidden=1
-"
+let NERDTreeShowHidden=1
+
 ""autopen NERDTree and focus cursor in new document
 autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd p
@@ -72,19 +70,14 @@ let g:NERDTreeMouseMode=3
 syntax enable
 set background=dark
 let g:solarized_termcolors=256
-"let g:solarized_contrast = "low"
-
-"let g:gruvbox_contrast_dark="low"
-"let g:gruvbox_termcolors=256
 colorscheme solarized
-"colorscheme gruvbox"
 
 " PEP8 formatting
 au BufNewFile,BufRead *.py
     \ set tabstop=4 |
     \ set softtabstop=4 |
     \ set shiftwidth=4 |
-    \ set textwidth=79 |
+    \ set textwidth=119 |
     \ set expandtab |
     \ set autoindent |
     \ set fileformat=unix |
@@ -106,25 +99,80 @@ autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" SYNTASTIC
+" Status Line Settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! GitBranch()
+  return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+endfunction
+
+function! StatuslineGit()
+  let l:branchname = GitBranch()
+  return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
+endfunction
+
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%F\ %l\:%c
+"Set the git branch
 
+set statusline+=%#PmenuSel#
+set statusline+=%#LineNr#
+set statusline+=%#CursorColumn#
+set statusline+=\ %l:%c
+
+set statusline+=\ %f
+"set statusline+=%m\
+set statusline+=%=
+set statusline+=%{StatuslineGit()}
+set statusline+=\ %p%%
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Syntastic
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_w = 0
 let g:syntastic_check_on_wq = 0
 let g:syntastic_python_checkers = ['flake8', 'pydocstyle']
 let g:syntastic_javascript_checkers = ['eslint']
-"let g:syntastic_typescript_checkers = ['eslint']
+let g:syntastic_html_checkers = ['eslint']
 let g:javascript_plugin_flow = 1
 
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Black
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:black_linelength=119
+autocmd BufWritePre *.py execute ':Black'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Prettier
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd BufWritePre *.ts execute ':Prettier'
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " FZF
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set rtp+=/usr/local/opt/fzf
+
+
+"Delete all Git conflict markers
+"Creates the command :GremoveConflictMarkers
+"If you not using vim fugitive you likely don't need this
+function! RemoveConflictMarkers() range
+  echom a:firstline.'-'.a:lastline
+  execute a:firstline.','.a:lastline . ' g/^<\{7}\|^|\{7}\|^=\{7}\|^>\{7}/d'
+endfunction
+"-range=% default is whole file
+command! -range=% GremoveConflictMarkers <line1>,<line2>call RemoveConflictMarkers()
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim-jsdoc
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:jsdoc_enable_es6 = 1
+let g:jsdoc_input_description = 1	
+"let g:jsdoc_allow_input_prompt = 1
+let g:jsdoc_underscore_private = 1	
