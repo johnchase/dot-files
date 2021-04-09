@@ -176,3 +176,21 @@ let g:jsdoc_enable_es6 = 1
 let g:jsdoc_input_description = 1	
 "let g:jsdoc_allow_input_prompt = 1
 let g:jsdoc_underscore_private = 1	
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" wsl copy paste
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"set clipboard+=unnamedplus
+"let g:clipboard = {
+"          \   'name': 'win32yank-wsl',
+"          \   'copy': {
+"          \      '+': 'win32yank.exe -i --crlf',
+"          \      '*': 'win32yank.exe -i --crlf',
+"          \    },
+"          \   'paste': {
+"          \      '+': 'win32yank.exe -o --lf',
+"          \      '*': 'win32yank.exe -o --lf',
+"          \   },
+"          \   'cache_enabled': 0,
+"          \ }
