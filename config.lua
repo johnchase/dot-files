@@ -7,7 +7,6 @@ a global executable or a path to
 an executable
 ]]
 -- THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
-
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = true
@@ -17,11 +16,19 @@ lvim.colorscheme = "tokyonight"
 lvim.leader = "space"
 -- add your own keymapping
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
+lvim.builtin.which_key.mappings["x"] = { ":x<cr>", "Save and Quit" }
 -- unmap a default keymapping
 -- lvim.keys.normal_mode["<C-Up>"] = ""
 -- edit a default keymapping
 -- lvim.keys.normal_mode["<C-q>"] = ":q<cr>"
-
+-- lvim.builtin.telescope.defaults.extensions = {
+-- 	media_files = {
+-- 		-- filetypes whitelist
+-- 		-- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
+-- 		filetypes = { "png", "webp", "jpg", "jpeg" },
+-- 		find_cmd = "rg", -- find command (defaults to `fd`)
+-- 	},
+-- }
 -- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
 -- we use protected-mode (pcall) just in case the plugin wasn't loaded yet.
 -- local _, actions = pcall(require, "telescope.actions")
@@ -62,7 +69,6 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 --   w = { "<cmd>Trouble lsp_workspace_diagnostics<cr>", "Diagnostics" },
 -- }
 
-
 -- TODO: User Config for predefined plugins
 -- After changing plugin config exit and reopen LunarVim, Run :PackerInstall :PackerCompile
 lvim.builtin.dashboard.active = true
@@ -72,17 +78,18 @@ lvim.builtin.nvimtree.show_icons.git = 0
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
-  "bash",
-  "c",
-  "javascript",
-  "json",
-  "lua",
-  "python",
-  "typescript",
-  "css",
-  "rust",
-  "java",
-  "yaml",
+	"bash",
+	"c",
+	"javascript",
+	"json",
+	"lua",
+	"html",
+	"python",
+	"typescript",
+	"css",
+	"rust",
+	"java",
+	"yaml",
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
@@ -127,50 +134,53 @@ lvim.builtin.treesitter.highlight.enabled = true
 -- end
 
 -- -- set a formatter, this will override the language server formatting capabilities (if it exists)
-local formatters = require "lvim.lsp.null-ls.formatters"
-formatters.setup {
-  { exe = "isort", filetypes = { "python" } },
-  { exe = "black", filetypes = { "python" } },
-  {
-    exe = "prettier",
-    ---@usage arguments to pass to the formatter
-    -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
-    args = { "--print-with", "100" },
-    ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
-    filetypes = { "typescript", "typescriptreact" },
-  },
-}
+local formatters = require("lvim.lsp.null-ls.formatters")
+formatters.setup({
+	{ exe = "isort", filetypes = { "python" } },
+	{ exe = "black", filetypes = { "python" } },
+	{ exe = "stylua", filetypes = { "lua" } },
+	{
+		exe = "prettier",
+		---@usage arguments to pass to the formatter
+		-- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
+		args = { "--print-with", "100" },
+		---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
+		filetypes = { "javascript", "typescript", "typescriptreact", "html", "angular" },
+	},
+})
 
 -- set additional linters
-local linters = require "lvim.lsp.null-ls.linters"
-linters.setup {
-  { exe = "flake8", filetypes = { "python" } },
-  {
-    exe = "codespell",
-    ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
-    filetypes = { "javascript", "python" },
-  },
-}
+local linters = require("lvim.lsp.null-ls.linters")
+linters.setup({
+	{ exe = "flake8", filetypes = { "python" } },
+	-- { exe = "eslint_d", filetypes = { "javascript", "typescript", "typescriptreact" } },
+	{
+		exe = "codespell",
+		---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
+		filetypes = { "javascript", "python" },
+	},
+})
 
 -- Additional Plugins
 lvim.plugins = {
-  {"morhetz/gruvbox"},
-  {"tpope/vim-surround"},
-  {"jiangmiao/auto-pairs"},
-  {"heavenshell/vim-pydocstring"},
-  {"tpope/vim-fugitive"},
-  {"folke/tokyonight.nvim"},
-  {"sainnhe/gruvbox-material"},
-  {"kyazdani42/blue-moon"},
-  {"folke/todo-comments.nvim",
+	{ "morhetz/gruvbox" },
+	{ "tpope/vim-surround" },
+	{ "ap/vim-css-color" },
+	{ "jiangmiao/auto-pairs" },
+	{ "heavenshell/vim-pydocstring" },
+	{ "tpope/vim-fugitive" },
+	{ "folke/tokyonight.nvim" },
+	{ "sainnhe/gruvbox-material" },
+	{ "kyazdani42/blue-moon" },
+	{ "alvan/vim-closetag" },
+	{
+		"folke/todo-comments.nvim",
 		event = "BufRead",
 		config = function()
 			require("todo-comments").setup()
-		end,},
-  {
-    "folke/trouble.nvim",
-    cmd = "TroubleToggle",
-  },
+		end,
+	},
+	{ "folke/trouble.nvim", cmd = "TroubleToggle" },
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
@@ -180,14 +190,15 @@ lvim.plugins = {
 
 -- Vim settings
 vim.opt.relativenumber = true
-vim.api.nvim_set_keymap('n', '<Leader><Space>', ':set hlsearch!<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<Leader><Space>", ":set hlsearch!<CR>", { noremap = true, silent = true })
 
 -- Vim Pydocstrings
 vim.g.pydocstring_doq_path = "/home/john/miniconda3/envs/action/bin/doq"
-vim.g.pydocstring_formatter = 'numpy'
+vim.g.pydocstring_formatter = "numpy"
 -- Disable pydocstring keybindings and add to which key. This prevents collisions between keybindings
 vim.g.pydocstring_enable_mapping = 0
-lvim.builtin.which_key.mappings["d"] = {
-  "<cmd>Pydocstring<cr>", "Pydocstring"
-}
+lvim.builtin.which_key.mappings["d"] = { "<cmd>Pydocstring<cr>", "Pydocstring" }
 
+lvim.lsp.override = vim.tbl_filter(function(name)
+	return name ~= "emmet_ls"
+end, lvim.lsp.override)
