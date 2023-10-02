@@ -1,3 +1,5 @@
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/bash_profile.pre.bash" ]] && builtin source "$HOME/.fig/shell/bash_profile.pre.bash"
 #20200205_1 Add `~/bin` to the `$PATH`
 export PATH="$HOME/bin:$PATH";
 export TZ=US/Pacific
@@ -49,34 +51,71 @@ complete -W "NSGlobalDomain" defaults;
 # Add `killall` tab completion for common apps
 complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes SystemUIServer Terminal Twitter" killall;
 
-#Set vim as default editor
-export VISUAL=nvim
+export VISUAL=lvim
 export EDITOR="$VISUAL"
+export PYTHONDONTWRITEBYTECODE=1 
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/johnchase/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/johnchase/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/johnchase/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/johnchase/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
 alias clock='while true; do tput reset; date +"%H:%M:%S" | figlet -f epic; sleep 1; done'
-alias vim="nvim"
-alias vi="nvim"
-alias oldvim="vim"
+# alias vim="nvim"
+# alias vi="nvim"
+# alias oldvim="vim"
 alias fix_pg="rm /usr/local/var/postgres/postmaster.pid"
-alias kpyc="find . -name "*.pyc" -exec rm -f {} \;"
+alias kpyc="find . -name '*.pyc' -exec rm -f {} \;"
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/johnchase/Downloads/google-cloud-sdk/path.bash.inc' ]; then . '/Users/johnchase/Downloads/google-cloud-sdk/path.bash.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/johnchase/Downloads/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/johnchase/Downloads/google-cloud-sdk/completion.bash.inc'; fi
+eval "$(/opt/homebrew/bin/brew shellenv)"export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
+NPM_PACKAGES="${HOME}/.npm-packages"
+
+
+export PATH="$PATH:$NPM_PACKAGES/bin"
+export PATH="/Users/jhch/.local/bin:$PATH"
+export PATH="/Users/jhch/.cargo/bin:$PATH"
+
+# Preserve MANPATH if you already defined it somewhere in your config.
+# Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
+export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
+
+# Fig post block. Keep at the bottom of this file.
+
+
+
+##
+# Your previous /Users/jhch/.bash_profile file was backed up as /Users/jhch/.bash_profile.macports-saved_2022-03-22_at_15:02:54
+##
+
+# MacPorts Installer addition on 2022-03-22_at_15:02:54: adding an appropriate PATH variable for use with MacPorts.
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+# Finished adapting your PATH environment variable for use with MacPorts.
+
+
+# MacPorts Installer addition on 2022-03-22_at_15:02:54: adding an appropriate MANPATH variable for use with MacPorts.
+export MANPATH="/opt/local/share/man:$MANPATH"
+# Finished adapting your MANPATH environment variable for use with MacPorts.
+
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/jhch/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/jhch/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/jhch/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/jhch/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+# Fig post block. Keep at the bottom of this file.
+[[ -f "$HOME/.fig/shell/bash_profile.post.bash" ]] && builtin source "$HOME/.fig/shell/bash_profile.post.bash"
